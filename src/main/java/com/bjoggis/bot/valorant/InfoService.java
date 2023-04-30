@@ -19,6 +19,10 @@ class InfoService {
 
   }
 
+  record Content(String content) {
+
+  }
+
   private final Logger logger = LoggerFactory.getLogger(InfoService.class);
 
   private final List<GameInfo> games = new ArrayList<>();
@@ -36,15 +40,13 @@ class InfoService {
     games.add(new GameInfo("Playoffs", LocalDateTime.of(2023, Month.MAY, 21, 19, 0)));
   }
 
-
   @Scheduled(cron = "0 0 10 * * ?")
   void runner() {
     RestTemplate restTemplate = new RestTemplate();
 
     LocalDate today = LocalDate.now();
     Optional<GameInfo> result = games.stream()
-        .filter(game -> game.date().toLocalDate().equals(today))
-        .findFirst();
+        .filter(game -> game.date().toLocalDate().equals(today)).findFirst();
 
     if (result.isPresent()) {
       logger.info("The first LocalDateTime that matches today's date is " + result.get());
@@ -53,19 +55,15 @@ class InfoService {
       return;
     }
 
-    String sb = "Ny Valorant Premier kamp i kveld klokka "
-        + result.get().date().toLocalTime()
-        + ".\n**Map: "
-        + result.get().map()
-        + "**"
-        + "\nMøt opp minst 10 minutter før kampstart.\n";
+    String text = "Ny Valorant Premier kamp i kveld klokka " + result.get().date().toLocalTime()
+        + ".\n**Map: " + result.get().map() + "**" + "\nMøt opp minst 10 minutter før kampstart.\n";
 
-    record Content(String content) {
+    final Content content = new Content(text);
 
-    }
+    logger.info("Sending message to Discord: " + content);
 
     restTemplate.postForObject(
         "https://discord.com/api/webhooks/1102312046034432070/cEnLY0firSTwQJUpV7x7u92RMl_oZMbDW4xVKI0H3-lm5OWLVfmaWWfQPtZksbGqySyc",
-        new Content(sb), String.class);
+        content, String.class);
   }
 }

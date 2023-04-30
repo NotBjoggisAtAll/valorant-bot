@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   valorant-bot:
-    image: ghcr.io/notbjoggisatall/valorant-bot:0.0.1-SNAPSHOT
+    image: ghcr.io/notbjoggisatall/valorant-bot:1.0
     restart: always
     container_name: valorant-bot
     environment:
