@@ -26,9 +26,12 @@ class InfoService {
   private final Logger logger = LoggerFactory.getLogger(InfoService.class);
 
   private final List<GameInfo> games = new ArrayList<>();
+  private final RestTemplate restTemplate = new RestTemplate();
+  private final ValorantProperties valorantProperties;
 
 
-  public InfoService() {
+  public InfoService(ValorantProperties valorantProperties) {
+    this.valorantProperties = valorantProperties;
     games.add(new GameInfo("Test", LocalDateTime.of(2023, Month.APRIL, 30, 23, 0)));
     games.add(new GameInfo("Ascent", LocalDateTime.of(2023, Month.MAY, 1, 19, 0)));
     games.add(new GameInfo("System Test", LocalDateTime.of(2023, Month.MAY, 3, 19, 0)));
@@ -42,8 +45,6 @@ class InfoService {
 
   @Scheduled(cron = "0 0 10 * * ?")
   void runner() {
-    RestTemplate restTemplate = new RestTemplate();
-
     LocalDate today = LocalDate.now();
     Optional<GameInfo> result = games.stream()
         .filter(game -> game.date().toLocalDate().equals(today)).findFirst();
@@ -62,8 +63,6 @@ class InfoService {
 
     logger.info("Sending message to Discord: " + content);
 
-    restTemplate.postForObject(
-        "https://discord.com/api/webhooks/1102312046034432070/cEnLY0firSTwQJUpV7x7u92RMl_oZMbDW4xVKI0H3-lm5OWLVfmaWWfQPtZksbGqySyc",
-        content, String.class);
+    restTemplate.postForObject(valorantProperties.webhook(), content, String.class);
   }
 }
