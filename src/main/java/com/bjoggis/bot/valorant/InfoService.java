@@ -57,9 +57,26 @@ class InfoService {
     }
 
     String text = "Ny Valorant Premier kamp i kveld klokka " + result.get().date().toLocalTime()
-        + ".\n**Map: " + result.get().map() + "**" + "\nMøt opp minst 10 minutter før kampstart.\n";
+        + ".\n**Map: " + result.get().map() + "**" + "\nMøt opp minst 10 minutter før kampstart.\n\n";
 
-    final Content content = new Content(text);
+    String dikt = """
+        Snart er tiden inne, å spille Valorant med min flokk
+        Forbered deg på å skyte, og å være på vakt som en rovdyrsflokk
+        Vi skal ut i kamp, og ta kontroll over slagmarken
+        Med ild i våre hjerter og våre hender fast på musen og tastaturet, skal vi ikke la fienden stå igjen som en vinner, og vi vil aldri gi opp vår mark til noen annen
+
+        La oss lade opp våre våpen og våre sinn
+        For denne kampen vil kreve alt vi har for å vinne
+        Vi skal spille som en enhet, og kjempe til siste åndedrag
+        For det er bare når vi er sammen, at vi kan beseire fiendens lags fordrag
+
+        Så la oss nå logge inn, og komme oss på banen
+        For nå er det på tide, at vi viser hva vi kan
+        Vi skal vise verden, at vi er best av det beste
+        Og når kampen er over, vil vi stå igjen som seierens nesten-reste.
+        """;
+
+    final Content content = new Content(text + dikt);
 
     logger.info("Sending message to Discord: " + content);
 
